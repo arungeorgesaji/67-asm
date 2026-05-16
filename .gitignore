@@ -1,0 +1,10 @@
+build/
+bin/
+obj/
+
+*.o
+*.obj
+*.out
+*.exe
+
+*.d
