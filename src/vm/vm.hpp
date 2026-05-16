@@ -12,7 +12,9 @@ public:
     void dumpRegisters() const;
 
 private:
+    void reset();
     uint8_t readByte(); 
+    void validateRegister(uint8_t reg) const;
 
     std::vector<uint8_t> memory;
     uint8_t registers[8] = {0};

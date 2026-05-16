@@ -9,9 +9,24 @@ enum Opcode : uint8_t {
     OP_HLT = 0xFF,
 };
 
+void VM::reset() {
+    ip = 0;
+    running = false;
+
+    for (size_t i = 0; i < 8; i++) {
+        registers[i] = 0;
+    }
+}
+
+void VM::validateRegister(uint8_t reg) const {
+    if (reg >= 8) {
+        throw std::runtime_error("Invalid register index");
+    }
+}
+
 void VM::load(const std::vector<uint8_t>& program) {
     memory = program;
-    ip = 0;
+    reset();
 }
 
 uint8_t VM::readByte() {
@@ -23,6 +38,10 @@ uint8_t VM::readByte() {
 }
 
 uint8_t VM::getRegister(size_t index) const {
+    if (index >= 8) {
+        throw std::runtime_error("Invalid register index");
+    }
+
     return registers[index];
 }
 
@@ -47,6 +66,8 @@ void VM::run() {
             uint8_t reg = readByte();
             uint8_t value = readByte();
 
+            validateRegister(reg);
+
             registers[reg] = value;
             break;
         }
@@ -54,6 +75,9 @@ void VM::run() {
         case OP_ADD: {
             uint8_t dest = readByte();
             uint8_t src = readByte();
+
+            validateRegister(dest);
+            validateRegister(src);
 
             registers[dest] += registers[src];
             break;
