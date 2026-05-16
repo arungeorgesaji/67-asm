@@ -12,6 +12,8 @@ public:
     void dumpRegisters() const;
 
 private:
+    uint8_t readByte(); 
+
     std::vector<uint8_t> memory;
     uint8_t registers[8] = {0};
 

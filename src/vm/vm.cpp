@@ -14,6 +14,14 @@ void VM::load(const std::vector<uint8_t>& program) {
     ip = 0;
 }
 
+uint8_t VM::readByte() {
+    if (ip >= memory.size()) {
+        throw std::runtime_error("Unexpected end of program");
+    }
+
+    return memory[ip++];
+}
+
 uint8_t VM::getRegister(size_t index) const {
     return registers[index];
 }
@@ -31,21 +39,21 @@ void VM::run() {
     running = true;
 
     while (running && ip < memory.size()) {
-        uint8_t opcode = memory[ip++];
+        uint8_t opcode = readByte();
 
         switch (opcode) {
 
         case OP_MOV: {
-            uint8_t reg = memory[ip++];
-            uint8_t value = memory[ip++];
+            uint8_t reg = readByte();
+            uint8_t value = readByte();
 
             registers[reg] = value;
             break;
         }
 
         case OP_ADD: {
-            uint8_t dest = memory[ip++];
-            uint8_t src = memory[ip++];
+            uint8_t dest = readByte();
+            uint8_t src = readByte();
 
             registers[dest] += registers[src];
             break;
