@@ -6,6 +6,9 @@
 enum Opcode : uint8_t {
     OP_MOV = 0x01,
     OP_ADD = 0x02,
+    OP_SUB = 0x03,
+    OP_MUL = 0x04,
+    OP_DIV = 0x05,
     OP_HLT = 0xFF,
 };
 
@@ -80,6 +83,46 @@ void VM::run() {
             validateRegister(src);
 
             registers[dest] += registers[src];
+            break;
+        }
+
+        case OP_SUB: {
+            uint8_t dest = readByte();
+            uint8_t src = readByte();
+
+            validateRegister(dest);
+            validateRegister(src);
+
+            registers[dest] -= registers[src];
+
+            break;
+        }
+
+        case OP_MUL: {
+            uint8_t dest = readByte();
+            uint8_t src = readByte();
+
+            validateRegister(dest);
+            validateRegister(src);
+
+            registers[dest] *= registers[src];
+
+            break;
+        }
+
+        case OP_DIV: {
+            uint8_t dest = readByte();
+            uint8_t src = readByte();
+
+            validateRegister(dest);
+            validateRegister(src);
+
+            if (registers[src] == 0) {
+                throw std::runtime_error("Division by zero");
+            }
+
+            registers[dest] /= registers[src];
+
             break;
         }
 
